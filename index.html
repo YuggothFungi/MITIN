@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dithering Effect</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="256" height="256"></canvas>
+    <script>
+        function drawDithering() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            const width = 32;  // Width of the raster
+            const height = 32; // Height of the raster
+            const cellSize = 8; // Size of each cell in pixels
+
+            // 4x4 dithering matrix
+            const ditheringMatrix = [
+                [0,  8,  2, 10],
+                [12,  4, 14,  6],
+                [3, 11,  1,  9],
+                [15,  7, 13,  5]
+            ];
+
+            // Loop through each pixel in the raster
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    // Calculate the intensity based on the position
+                    const intensity = Math.floor((x + y) / (width + height) * 16);
+                    const threshold = ditheringMatrix[y % 4][x % 4];
+
+                    // Determine the color based on the threshold
+                    const color = intensity > threshold ? 'white' : 'black';
+
+                    // Fill the cell
+                    ctx.fillStyle = color;
+                    ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+                }
+            }
+        }
+
+        drawDithering(); // Call the function to draw
+    </script>
+</body>
+</html>
